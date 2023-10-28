@@ -1,0 +1,2 @@
+target-version = "py310"
+line-length = 120
