@@ -1,0 +1,217 @@
+name: Build Wheels
+
+on:
+  workflow_dispatch:
+    inputs:
+      repo:
+        description: "Repository name with owner, as in actions/checkout"
+        required: true
+        type: string
+      repo-tag:
+        description: "Repository tag, as in actions/checkout"
+        type: string
+      repo-subdir:
+        description: "Relative path to package dir (or empty if root)"
+        type: string
+      torch-version:
+        description: "Torch versions, separated with a comma"
+        required: true
+        type: string
+      limit-python:
+        description: "Python versions, separated with a comma"
+        type: string
+      limit-compute-platform:
+        description: "PyTorch compute platforms, separated with a comma"
+        type: string
+      include-hash:
+        description: "Include commit hash in version"
+        type: boolean
+        default: false
+      linux-wheels:
+        description: "Build Linux wheels"
+        type: boolean
+        default: true
+      windows-wheels:
+        description: "Build Windows wheels"
+        type: boolean
+        default: true
+      macos-wheels:
+        description: "Build MacOS wheels"
+        type: boolean
+        default: true
+
+jobs:
+  get-jobs:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.11"
+
+      - name: Checkout package repository
+        uses: actions/checkout@v4
+
+      - name: Set job matrix
+        id: job-matrix
+        env:
+          TORCH_VERSION: ${{ inputs.torch-version }}
+          LIMIT_PYTHON: ${{ inputs.limit-python }}
+          LIMIT_COMPUTE_PLATFORM: ${{ inputs.limit-compute-platform }}
+          LINUX_WHEELS: ${{ inputs.linux-wheels }}
+          WINDOWS_WHEELS: ${{ inputs.windows-wheels }}
+          MACOS_WHEELS: ${{ inputs.macos-wheels }}
+        run: |
+          set -eu
+          echo "matrix=$(python get_jobs.py)" >> $GITHUB_OUTPUT
+
+    outputs:
+      matrix: ${{ steps.job-matrix.outputs.matrix }}
+
+  build-wheels:
+    needs: get-jobs
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJson(needs.get-jobs.outputs.matrix) }}
+
+    steps:
+      - name: Checkout package repository
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ inputs.repo }}
+          ref: ${{ inputs.repo-tag }}
+          sparse-checkout: ${{ inputs.repo-subdir }}
+
+      # To overcome Windows path length problems
+      - name: Move files
+        if: ${{ inputs.repo-subdir != '' }}
+        env:
+          SUBDIR: ${{ inputs.repo-subdir }}
+        run: |
+          shopt -s dotglob
+          mv $SUBDIR _tmp
+          rm -R ${SUBDIR%%/*}
+          mv -f _tmp/* .
+          rm -R _tmp
+        shell: bash
+
+      - name: Set version suffix in setup.py
+        run: |
+          set -eu
+
+          I_ARG=""
+          if [[ "${{ runner.os }}" == "macOS" ]]; then
+            I_ARG="''"
+          fi
+
+          HASH=""
+          if [[ "${{ inputs.include-hash }}" == "true" ]]; then
+            HASH=$(git rev-parse --short HEAD)
+          fi
+
+          VERSION_SUFFIX=+${HASH}pt${{ matrix.torch-version }}${{ matrix.compute-platform }}
+          sed -i $I_ARG "s/\(^    version=\)\(.*\)\(\,$\)/\1\2 + \"$VERSION_SUFFIX\"\3/" setup.py
+        shell: bash
+
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          path: _builder
+
+      - name: Install CUDA
+        if: ${{ matrix.compute-platform != 'cpu' }}
+        env:
+          CUDA_VERSION: ${{ matrix.compute-platform }}
+        run: |
+          source _builder/.github/workflows/cuda/${{ runner.os }}_install.sh
+        shell: bash
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install PyTorch ${{ matrix.torch-version }}+${{ matrix.compute-platform }}
+        run: |
+          pip install --upgrade \
+            wheel \
+            setuptools \
+            build \
+            --extra-index-url https://download.pytorch.org/whl/${{ matrix.compute-platform }} \
+            torch==${{ matrix.torch-version }} \
+            ninja \
+            numpy
+        shell: bash
+
+      - name: Build CPU wheel
+        if: ${{ matrix.compute-platform == 'cpu' }}
+        run: |
+          if [[ "${{ runner.os }}" == "macOS" ]]; then
+            export CC=clang
+            export CXX=clang++
+          fi
+          python -m build --wheel --no-isolation --outdir dist
+        shell: bash
+
+      - name: Build CUDA wheel
+        if: ${{ matrix.compute-platform != 'cpu' }}
+        env:
+          CUDA_VERSION: ${{ matrix.compute-platform }}
+        run: |
+          source _builder/.github/workflows/cuda/${{ runner.os }}_env.sh
+          python -m build --wheel --no-isolation --outdir dist
+        shell: bash
+
+      - uses: actions/upload-artifact@v3
+        name: Upload wheels as artifacts
+        with:
+          name: packages
+          path: dist/*.whl
+          retention-days: 7
+          if-no-files-found: error
+
+  create-release:
+    needs: build-wheels
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Get wheels from artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: packages
+
+      - name: Get release name
+        id: data
+        run: |
+          set -eu
+
+          wheels=(*.whl)
+          wheel=${wheels[0]}
+          release_name=${wheel%%+*}
+
+          if [[ "${{ inputs.include-hash }}" == "true" ]]; then
+            after_plus=${wheel##*+}
+            hash=${after_plus:0:7}
+            release_name="${release_name}+${hash}"
+          fi
+
+          echo "release_name=${release_name}" >> $GITHUB_OUTPUT
+
+      - name: Create a Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ steps.data.outputs.release_name }}
+          files: |
+            *.whl
+
+  make-packages-index:
+    needs: create-release
+    permissions:
+      pages: write
+      id-token: write
+    uses: ./.github/workflows/make_packages_index.yml

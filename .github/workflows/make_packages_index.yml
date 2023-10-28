@@ -1,0 +1,45 @@
+name: Create Package Index
+
+on:
+  workflow_dispatch:
+  workflow_call:
+
+jobs:
+  create_index:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.11"
+
+      - name: Install requests
+        run: pip install requests
+
+      - name: Create packages index
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          REPO_NAME: ${{ github.repository }}
+        run: python create_index.py
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v2
+
+  deploy:
+    needs: create_index
+    permissions:
+      pages: write
+      id-token: write
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Deploy artifact
+        id: deployment
+        uses: actions/deploy-pages@v1
+        env:
+          name: github-pages
+          url: ${{ steps.deployment.outputs.page_url }}
