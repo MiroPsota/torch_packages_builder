@@ -146,6 +146,16 @@ jobs:
             numpy
         shell: bash
 
+      - name: Apply package specific steps
+        env:
+          OS: ${{ runner.os }}
+          REPO: ${{ inputs.repo }}
+          TORCH_VERSION: ${{ matrix.torch-version }}
+          PYTHON_VERSION: ${{ matrix.python-version }}
+          COMPUTE_PLATFORM: ${{ matrix.compute-platform }}
+        run: bash _builder/package_specific.sh
+        shell: bash
+
       - name: Build CPU wheel
         if: ${{ matrix.compute-platform == 'cpu' }}
         run: |
@@ -179,6 +189,7 @@ jobs:
     permissions:
       contents: write
 
+    if: ${{ github.ref == 'refs/heads/main' }}
     steps:
       - name: Get wheels from artifacts
         uses: actions/download-artifact@v3
@@ -214,4 +225,5 @@ jobs:
     permissions:
       pages: write
       id-token: write
+    if: ${{ github.ref == 'refs/heads/main' }}
     uses: ./.github/workflows/make_packages_index.yml
