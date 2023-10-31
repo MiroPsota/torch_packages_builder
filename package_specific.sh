@@ -1,5 +1,7 @@
 #! /bin/bash
 
+set -eu -o pipefail
+
 SCRIPT_DIR=${BASH_SOURCE%/*}
 
 if [[ $REPO == "facebookresearch/Mask2Former" ]] \
@@ -15,4 +17,26 @@ if [[ $REPO == "rusty1s/pytorch_cluster" ]] \
   # shellcheck disable=SC2154
   TORCH_PYBIND_DIR="$Python_ROOT_DIR/lib/site-packages/torch/include/pybind11"
   patch -d "$TORCH_PYBIND_DIR" < "$SCRIPT_DIR"/package_specific/torch_pybind_cast_h.patch
+fi
+
+if [[ $REPO == "facebookresearch/pytorch3d" ]]; then
+  CUB_VERSION=""
+  if [[ $OS == "Windows" ]] \
+    && { [[ $COMPUTE_PLATFORM == "cu117" ]] || [[ $COMPUTE_PLATFORM == "cu118" ]] || [[ $COMPUTE_PLATFORM == "cu121" ]]; }; then
+    CUB_VERSION="1.17.2"
+  fi
+  if [[ $OS == "Linux" ]] \
+    && { [[ $COMPUTE_PLATFORM == "cu102" ]] || [[ $COMPUTE_PLATFORM == "cu113" ]]; }; then
+    CUB_VERSION="1.10.0"
+  fi
+
+  if [ -n "${CUB_VERSION}" ]; then
+    mkdir cub
+    curl -L https://github.com/NVIDIA/cub/archive/${CUB_VERSION}.tar.gz | tar -xzf - --strip-components=1 --directory cub
+    echo "CUB_HOME=$PWD/cub" >> "$GITHUB_ENV"
+  fi
+
+  if [[ $OS == "Linux" ]] && [[ $COMPUTE_PLATFORM == "cu102" ]]; then
+    patch -p0 < "$SCRIPT_DIR"/package_specific/pytorch3d_cpp14.patch
+  fi
 fi
