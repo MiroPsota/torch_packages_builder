@@ -12,6 +12,7 @@ if [[ $REPO == "rusty1s/pytorch_cluster" ]] \
   && [[ ${TORCH_VERSION:0:4} == "1.12" ]] \
   && [[ $COMPUTE_PLATFORM == "cu116" ]]; then
   # Fixes https://github.com/facebookresearch/pytorch3d/issues/1024
+  # shellcheck disable=SC2154
   TORCH_PYBIND_DIR="$Python_ROOT_DIR/lib/site-packages/torch/include/pybind11"
   patch -d "$TORCH_PYBIND_DIR" < "$SCRIPT_DIR"/package_specific/torch_pybind_cast_h.patch
 fi
