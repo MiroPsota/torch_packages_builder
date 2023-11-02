@@ -213,12 +213,10 @@ jobs:
 
           echo "release_name=${release_name}" >> $GITHUB_OUTPUT
 
-      - name: Create a Release
-        uses: softprops/action-gh-release@v1
+      - uses: ncipollo/release-action@v1
         with:
-          tag_name: ${{ steps.data.outputs.release_name }}
-          files: |
-            *.whl
+          tag: ${{ steps.data.outputs.release_name }}
+          artifacts: "*.whl"
 
   make-packages-index:
     needs: create-release
