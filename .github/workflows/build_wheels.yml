@@ -217,6 +217,7 @@ jobs:
         with:
           tag: ${{ steps.data.outputs.release_name }}
           artifacts: "*.whl"
+          allowUpdates: true
 
   make-packages-index:
     needs: create-release
