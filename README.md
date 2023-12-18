@@ -67,3 +67,7 @@ Only `x86-64` architecture.
 
 - **No Support for Pip Cache:**
   `pip` relies on http cache, and GitHub generates on-the-fly redirections for release links, so they are probably not playing nicely together.
+
+## Credits
+
+A huge thanks to <https://github.com/rusty1s/pytorch_cluster>
