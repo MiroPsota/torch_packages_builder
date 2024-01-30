@@ -178,8 +178,9 @@ jobs:
       - uses: actions/upload-artifact@v4
         name: Upload wheels as artifacts
         with:
-          name: packages
+          name: wheel-${{ matrix.os }}-py${{ matrix.python-version }}-pt${{ matrix.torch-version }}-${{ matrix.compute-platform }}
           path: dist/*.whl
+          compression-level: 0
           retention-days: 7
           if-no-files-found: error
 
@@ -194,7 +195,8 @@ jobs:
       - name: Get wheels from artifacts
         uses: actions/download-artifact@v4
         with:
-          name: packages
+          pattern: wheel-*
+          merge-multiple: true
 
       - name: Get release name
         id: data
