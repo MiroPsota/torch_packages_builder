@@ -12,7 +12,7 @@ class TorchRelease:
 
 LINUX_OS = "ubuntu-20.04"
 WINDOWS_OS = "windows-2019"
-MACOS_OS = "macos-11"
+MACOS_OS = "macos-12"
 
 TORCH_RELEASES = {
     "1.11.0": TorchRelease(("3.7", "3.8", "3.9", "3.10"), ("cpu", "cu102", "cu113", "rocm4.5.2")),
