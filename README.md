@@ -54,13 +54,13 @@ Where `<compute_platform>` is, as in PyTorch, one of `cpu`, `cu<CUDA_version>`, 
 ### Example Package Install Lines
 
 ```bash
-detectron2==0.6+a0e22dbpt1.11.0cpu
-pytorch3d==0.7.5+pt2.1.0cu121
+detectron2==0.6+864913fpt1.11.0cpu
+pytorch3d==0.7.6+pt2.2.1cu121
 ```
 
 ## Supported combinations
 
-Tested with PyTorch `1.11.0` - `2.1.2` and their respective compute platforms and supported OSes, with an exception for `cu102` on Windows (no VS 2017 on the GH `windows-2019` runner), and the `rocm` platform.
+Tested with PyTorch `1.11.0` - `2.2.1` and their respective compute platforms and supported OSes, with an exception for `cu102` on Windows (no VS 2017 on the GH `windows-2019` runner), and the `rocm` platform.
 Only `x86-64` architecture.
 
 ## Pitfalls
