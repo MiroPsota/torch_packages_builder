@@ -10,9 +10,10 @@ class TorchRelease:
     compute_platforms: tuple
 
 
-LINUX_OS = "ubuntu-20.04"
-WINDOWS_OS = "windows-2019"
-MACOS_OS = "macos-12"
+LINUX_X64 = "ubuntu-20.04"
+WINDOWS_X64 = "windows-2019"
+MACOS_X64 = "macos-12"
+MACOS_ARM64 = "macos-14"
 
 TORCH_RELEASES = {
     "1.11.0": TorchRelease(("3.7", "3.8", "3.9", "3.10"), ("cpu", "cu102", "cu113", "rocm4.5.2")),
@@ -47,9 +48,10 @@ def main():
         limit_compute_platform = limit_compute_platform.split(",")
 
     oses_names = []
-    add_os(oses_names, LINUX_OS, "LINUX_WHEELS")
-    add_os(oses_names, WINDOWS_OS, "WINDOWS_WHEELS")
-    add_os(oses_names, MACOS_OS, "MACOS_WHEELS")
+    add_os(oses_names, LINUX_X64, "LINUX_WHEELS")
+    add_os(oses_names, WINDOWS_X64, "WINDOWS_WHEELS")
+    add_os(oses_names, MACOS_X64, "MACOS_WHEELS")
+    add_os(oses_names, MACOS_ARM64, "MACOS_WHEELS")
     if not oses_names:
         raise RuntimeError("Select at least one OS")
 
@@ -58,7 +60,7 @@ def main():
         for os_name, python_version, compute_platform in product(
             oses_names, TORCH_RELEASES[torch_version].python_versions, TORCH_RELEASES[torch_version].compute_platforms
         ):
-            if os_name == MACOS_OS and compute_platform != "cpu":
+            if os_name in (MACOS_X64, MACOS_ARM64) and compute_platform != "cpu":
                 continue
             if compute_platform.startswith("rocm"):
                 continue
@@ -68,11 +70,20 @@ def main():
             if limit_compute_platform and compute_platform not in limit_compute_platform:
                 continue
 
-            if torch_version in ("1.13.0", "1.13.1") and os_name != LINUX_OS:
+            if torch_version in ("1.13.0", "1.13.1") and os_name != LINUX_X64:
                 continue
 
             # Requires VS 2017 not presented in Windows GH runner
-            if compute_platform == "cu102" and os_name == WINDOWS_OS:
+            if compute_platform == "cu102" and os_name == WINDOWS_X64:
+                continue
+
+            tv = [int(x) for x in torch_version.split(".")]
+            pv = [int(x) for x in python_version.split(".")]
+            if os_name == MACOS_X64 and tv[0] == 2 and tv[1] >= 3:
+                continue
+
+            # actions/setup-python does not have Python 3.9 or less
+            if os_name == MACOS_ARM64 and pv[1] <= 9:
                 continue
 
             jobs.append({

@@ -61,7 +61,6 @@ pytorch3d==0.7.6+pt2.2.1cu121
 ## Supported combinations
 
 Tested with PyTorch `1.11.0` - `2.3.0` and their respective compute platforms and supported OSes, with an exception for `cu102` on Windows (no VS 2017 on the GH `windows-2019` runner), and the `rocm` platform.
-Only `x86-64` architecture.
 
 ## Pitfalls
 

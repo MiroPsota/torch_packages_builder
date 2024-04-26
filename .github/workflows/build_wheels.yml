@@ -158,20 +158,21 @@ jobs:
 
       - name: Build CPU wheel
         if: ${{ matrix.compute-platform == 'cpu' }}
+        env:
+          OS: ${{ runner.os }}
         run: |
-          if [[ "${{ runner.os }}" == "macOS" ]]; then
-            export CC=clang
-            export CXX=clang++
-          fi
+          source _builder/.github/workflows/env.sh
           python -m build --wheel --no-isolation --outdir dist
         shell: bash
 
       - name: Build CUDA wheel
         if: ${{ matrix.compute-platform != 'cpu' }}
         env:
+          OS: ${{ runner.os }}
           CUDA_VERSION: ${{ matrix.compute-platform }}
         run: |
           source _builder/.github/workflows/cuda/${{ runner.os }}_env.sh
+          source _builder/.github/workflows/env.sh
           python -m build --wheel --no-isolation --outdir dist
         shell: bash
 
