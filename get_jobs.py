@@ -74,14 +74,12 @@ def main():
             if compute_platform == "cu102" and os_name == WINDOWS_OS:
                 continue
 
-            jobs.append(
-                {
-                    "os": os_name,
-                    "torch-version": torch_version,
-                    "python-version": python_version,
-                    "compute-platform": compute_platform,
-                }
-            )
+            jobs.append({
+                "os": os_name,
+                "torch-version": torch_version,
+                "python-version": python_version,
+                "compute-platform": compute_platform,
+            })
 
     if not jobs:
         raise RuntimeError("No jobs to do")
