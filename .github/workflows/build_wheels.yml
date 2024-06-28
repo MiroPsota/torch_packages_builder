@@ -136,9 +136,19 @@ jobs:
 
       - name: Install PyTorch ${{ matrix.torch-version }}+${{ matrix.compute-platform }}
         run: |
+          versionlte() {
+            [ "$1" = "`echo -e "$1\n$2" | sort -V | head -n1`" ]
+          }
+          versionlt() {
+            [ "$1" = "$2" ] && return 1 || versionlte $1 $2
+          }
+          VERSION_LIMIT=""
+          if versionlt ${{ matrix.torch-version }} "2.2.0" ; then
+            VERSION_LIMIT="<70"
+          fi
           pip install --upgrade \
             wheel \
-            setuptools \
+            setuptools$VERSION_LIMIT \
             build \
             --extra-index-url https://download.pytorch.org/whl/${{ matrix.compute-platform }} \
             torch==${{ matrix.torch-version }} \
