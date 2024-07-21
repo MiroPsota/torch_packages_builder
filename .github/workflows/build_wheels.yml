@@ -142,18 +142,24 @@ jobs:
           versionlt() {
             [ "$1" = "$2" ] && return 1 || versionlte $1 $2
           }
-          VERSION_LIMIT=""
+
+          SETUPTOOLS_VERSION_LIMIT=""
           if versionlt ${{ matrix.torch-version }} "2.2.0" ; then
-            VERSION_LIMIT="<70"
+            SETUPTOOLS_VERSION_LIMIT="<70"
           fi
+          NUMPY_VERSION_LIMIT=""
+          if versionlt ${{ matrix.torch-version }} "2.4.0" ; then
+            NUMPY_VERSION_LIMIT="<2"
+          fi
+
           pip install --upgrade \
             wheel \
-            setuptools$VERSION_LIMIT \
+            setuptools$SETUPTOOLS_VERSION_LIMIT \
             build \
             --extra-index-url https://download.pytorch.org/whl/${{ matrix.compute-platform }} \
             torch==${{ matrix.torch-version }} \
             ninja \
-            numpy
+            numpy$NUMPY_VERSION_LIMIT
         shell: bash
 
       - name: Apply package specific steps
