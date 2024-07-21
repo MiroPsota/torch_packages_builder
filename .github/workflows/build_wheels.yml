@@ -113,7 +113,7 @@ jobs:
           fi
 
           VERSION_SUFFIX=+${HASH}pt${{ matrix.torch-version }}${{ matrix.compute-platform }}
-          sed -i $I_ARG "s/\(^    version=\)\(.*\)\(\,$\)/\1\2 + \"$VERSION_SUFFIX\"\3/" setup.py
+          sed -i $I_ARG "s/\(    version=\)\(.*\)\(\,$\)/\1\2 + \"$VERSION_SUFFIX\"\3/" setup.py
         shell: bash
 
       - name: Checkout

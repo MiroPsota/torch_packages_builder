@@ -1,0 +1,35 @@
+--- setup.py
++++ setup.py
+@@ -105,0 +105,2 @@
++    cub_home = os.environ.get("CUB_HOME", None)
++    include_dirs = [cub_home] if cub_home is not None else []
+@@ -108,1 +108,1 @@
+-            cpp_extension.CppExtension(
++            cpp_extension.CUDAExtension(
+@@ -115,1 +115,1 @@
+-            cpp_extension.CppExtension(
++            cpp_extension.CUDAExtension(
+@@ -122,1 +122,1 @@
+-            cpp_extension.CppExtension(
++            cpp_extension.CUDAExtension(
+@@ -127,0 +127,1 @@
++                include_dirs=include_dirs,
+--- fairseq/clib/cuda/ngram_repeat_block_cuda_kernel.cu
++++ fairseq/clib/cuda/ngram_repeat_block_cuda_kernel.cu
+@@ -14,0 +14,1 @@
++#include <cstdint>
+@@ -18,1 +18,1 @@
+-    long* __restrict__ tokens,
++    int64_t* __restrict__ tokens,
+@@ -32,1 +32,1 @@
+-  extern __shared__ long tokens_shm[];
++  extern __shared__ int64_t tokens_shm[];
+@@ -58,1 +58,1 @@
+-    const torch::Tensor tokens,
++    torch::Tensor tokens,
+@@ -69,1 +69,1 @@
+-  auto token_ptr = tokens.data_ptr<long>();
++  auto token_ptr = tokens.data_ptr<int64_t>();
+@@ -72,1 +72,1 @@
+-  int shared_mem_size = (step + 1) * sizeof(long);
++  int shared_mem_size = (step + 1) * sizeof(int64_t);
