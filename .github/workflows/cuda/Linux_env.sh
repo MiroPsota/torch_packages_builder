@@ -18,6 +18,7 @@ declare -A CUDA_ARCHS=(
   ["cu118"]="3.7;5.0;6.0;7.0;7.5;8.0;8.6;9.0"
 
   ["cu121"]="5.0;6.0;7.0;7.5;8.0;8.6;9.0"
+  ["cu124"]="5.0;6.0;7.0;7.5;8.0;8.6;9.0"
 )
 export TORCH_CUDA_ARCH_LIST=${CUDA_ARCHS[$CUDA_VERSION]}
 export FORCE_CUDA=1
