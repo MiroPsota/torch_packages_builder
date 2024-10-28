@@ -33,6 +33,7 @@ TORCH_RELEASES = {
     "2.3.1": TorchRelease(("3.8", "3.9", "3.10", "3.11", "3.12"), ("cpu", "cu118", "cu121", "rocm6.0")),
     "2.4.0": TorchRelease(("3.8", "3.9", "3.10", "3.11", "3.12"), ("cpu", "cu118", "cu121", "cu124", "rocm6.1")),
     "2.4.1": TorchRelease(("3.8", "3.9", "3.10", "3.11", "3.12"), ("cpu", "cu118", "cu121", "cu124", "rocm6.1")),
+    "2.5.0": TorchRelease(("3.9", "3.10", "3.11", "3.12", "3.13"), ("cpu", "cu118", "cu121", "cu124", "rocm6.2")),
 }
 
 
@@ -74,6 +75,9 @@ def main():
                 continue
 
             if torch_version in ("1.13.0", "1.13.1") and os_name != LINUX_X64:
+                continue
+
+            if torch_version.startswith("2.5") and python_version == "3.13" and os_name != LINUX_X64:
                 continue
 
             # Requires VS 2017 not presented in Windows GH runner
