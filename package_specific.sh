@@ -48,3 +48,9 @@ if [[ $REPO == "facebookresearch/fairseq" ]]; then
   pip install cython
   patch -p0 < "$SCRIPT_DIR"/package_specific/fairseq_cub.patch
 fi
+
+if [[ $REPO == "open-mmlab/mmcv" ]] \
+  && [[ $TORCH_VERSION == "1.12.1" ]] \
+  && [[ $COMPUTE_PLATFORM == "cu102" ]]; then
+  patch -p0 < "$SCRIPT_DIR"/package_specific/mmcv_cpp14.patch
+fi

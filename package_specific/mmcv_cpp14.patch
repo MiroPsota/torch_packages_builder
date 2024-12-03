@@ -1,0 +1,8 @@
+--- setup.py
++++ setup.py
+@@ -204 +204 @@
+-            if parse_version(torch.__version__) <= parse_version('1.12.1'):
++            if parse_version(torch.__version__) <= parse_version('1.12.2'):
+@@ -441 +441 @@
+-            if parse_version(torch.__version__) <= parse_version('1.12.1'):
++            if parse_version(torch.__version__) <= parse_version('1.12.2'):
