@@ -12,7 +12,7 @@ class TorchRelease:
 
 LINUX_X64 = "ubuntu-20.04"
 WINDOWS_X64 = "windows-2019"
-MACOS_X64 = "macos-12"
+MACOS_X64 = "macos-13"
 MACOS_ARM64 = "macos-14"
 
 TORCH_RELEASES = {
