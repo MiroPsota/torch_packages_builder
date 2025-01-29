@@ -8,6 +8,7 @@ if [[ $CUDA_VERSION == "cu102" ]]; then
 fi
 
 # https://github.com/pytorch/builder/blob/main/manywheel/build_cuda.sh
+# https://github.com/pytorch/pytorch/blob/main/.ci/manywheel/build_cuda.sh
 declare -A CUDA_ARCHS=(
   ["cu102"]="3.7;5.0;6.0;7.0"
 
@@ -19,6 +20,7 @@ declare -A CUDA_ARCHS=(
 
   ["cu121"]="5.0;6.0;7.0;7.5;8.0;8.6;9.0"
   ["cu124"]="5.0;6.0;7.0;7.5;8.0;8.6;9.0"
+  ["cu126"]="5.0;6.0;7.0;7.5;8.0;8.6;9.0+PTX"
 )
 export TORCH_CUDA_ARCH_LIST=${CUDA_ARCHS[$CUDA_VERSION]}
 export FORCE_CUDA=1

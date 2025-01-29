@@ -12,6 +12,7 @@ class TorchRelease:
 
 LINUX_X64 = "ubuntu-20.04"
 WINDOWS_X64 = "windows-2019"
+WINDOWS_X64_2022 = "windows-2022"
 MACOS_X64 = "macos-13"
 MACOS_ARM64 = "macos-14"
 
@@ -35,6 +36,7 @@ TORCH_RELEASES = {
     "2.4.1": TorchRelease(("3.8", "3.9", "3.10", "3.11", "3.12"), ("cpu", "cu118", "cu121", "cu124", "rocm6.1")),
     "2.5.0": TorchRelease(("3.9", "3.10", "3.11", "3.12", "3.13"), ("cpu", "cu118", "cu121", "cu124", "rocm6.2")),
     "2.5.1": TorchRelease(("3.9", "3.10", "3.11", "3.12", "3.13"), ("cpu", "cu118", "cu121", "cu124", "rocm6.2")),
+    "2.6.0": TorchRelease(("3.9", "3.10", "3.11", "3.12", "3.13"), ("cpu", "cu118", "cu124", "cu126", "rocm6.2.4")),
 }
 
 

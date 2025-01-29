@@ -5,6 +5,7 @@ export CUDA_HOME="/c/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v$CUDA_SHOR
 export PATH=$CUDA_HOME/bin:$PATH
 
 # https://github.com/pytorch/builder/blob/main/windows/cuda*.bat
+# https://github.com/pytorch/pytorch/blob/main/.ci/pytorch/windows/cuda*.bat
 declare -A CUDA_ARCHS=(
   ["cu102"]="3.7+PTX;5.0;6.0;6.1;7.0;7.5"
 
@@ -16,6 +17,7 @@ declare -A CUDA_ARCHS=(
 
   ["cu121"]="5.0;6.0;6.1;7.0;7.5;8.0;8.6;9.0"
   ["cu124"]="5.0;6.0;6.1;7.0;7.5;8.0;8.6;9.0"
+  ["cu126"]="5.0;6.0;6.1;7.0;7.5;8.0;8.6;9.0"
 )
 export TORCH_CUDA_ARCH_LIST=${CUDA_ARCHS[$CUDA_VERSION]}
 export FORCE_CUDA=1
