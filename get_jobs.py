@@ -10,9 +10,8 @@ class TorchRelease:
     compute_platforms: tuple
 
 
-LINUX_X64 = "ubuntu-20.04"
+LINUX_X64 = "ubuntu-22.04"
 WINDOWS_X64 = "windows-2019"
-WINDOWS_X64_2022 = "windows-2022"
 MACOS_X64 = "macos-13"
 MACOS_ARM64 = "macos-14"
 
