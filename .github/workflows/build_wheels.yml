@@ -84,6 +84,7 @@ jobs:
           repository: ${{ inputs.repo }}
           ref: ${{ inputs.repo-tag }}
           sparse-checkout: ${{ inputs.repo-subdir }}
+          submodules: true
 
       # To overcome Windows path length problems
       - name: Move files
