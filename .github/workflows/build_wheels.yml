@@ -114,7 +114,10 @@ jobs:
           fi
 
           VERSION_SUFFIX=+${HASH}pt${{ matrix.torch-version }}${{ matrix.compute-platform }}
-          sed -i $I_ARG "s/\(    version=\)\(.*\)\(\,$\)/\1\2 + \"$VERSION_SUFFIX\"\3/" setup.py
+          sed -i $I_ARG "s/\(    version=\)\(.*\)\(\,$\)/\1\2 + \"$VERSION_SUFFIX\"\3/w /tmp/changes.txt" setup.py
+          if [ ! -s "/tmp/changes.txt" ]; then
+            sed -i $I_ARG "s/\(    name=.*\,$\)/\1\n    version=\"0.0.1\" + \"$VERSION_SUFFIX\",/" setup.py
+          fi
         shell: bash
 
       - name: Checkout
