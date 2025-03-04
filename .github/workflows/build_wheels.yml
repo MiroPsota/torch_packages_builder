@@ -206,6 +206,31 @@ jobs:
 
     if: ${{ github.ref == 'refs/heads/main' }}
     steps:
+      - name: Free up space
+        run: |
+          echo "Disk space before cleanup:"
+          df -h
+
+          sudo rm -rf /usr/local/lib/android
+          sudo rm -rf /usr/local/.ghcup
+          sudo rm -rf /opt/hostedtoolcache/CodeQL
+          sudo rm -rf /opt/hostedtoolcache/PyPy
+          sudo rm -rf /opt/hostedtoolcache/go
+          sudo rm -rf /usr/share/dotnet
+          sudo rm -rf /opt/ghc
+          sudo rm -rf /usr/local/share/boost
+          sudo rm -rf /usr/local/lib/heroku
+          sudo rm -rf /usr/local/share/chromium
+
+          sudo apt purge -y \
+            firefox \
+            google-chrome-stable \
+            microsoft-edge-stable
+          sudo apt-get clean
+
+          echo "Disk space after cleanup:"
+          df -h
+
       - name: Get wheels from artifacts
         uses: actions/download-artifact@v4
         with:
