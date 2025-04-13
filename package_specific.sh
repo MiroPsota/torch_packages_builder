@@ -60,3 +60,7 @@ if [[ $REPO == "NVlabs/tiny-cuda-nn" ]]; then
   echo "LIBRARY_PATH=/usr/local/cuda/lib64/stubs" >> "$GITHUB_ENV"
   echo "TCNN_CUDA_ARCHITECTURES=${TORCH_CUDA_ARCH_LIST}" | sed "s/\(\.\|\+PTX\)//g" >> "$GITHUB_ENV"
 fi
+
+if [[ $REPO == "Dao-AILab/flash-attention" ]]; then
+  pip install psutils packaging
+fi
