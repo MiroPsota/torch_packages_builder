@@ -229,6 +229,8 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+      id-token: write
+      attestations: write
 
     if: ${{ github.ref == 'refs/heads/main' }}
     steps:
@@ -262,6 +264,11 @@ jobs:
         with:
           pattern: wheel-*
           merge-multiple: true
+
+      - name: Generate artifact attestation
+        uses: actions/attest-build-provenance@v2
+        with:
+          subject-path: "*.whl"
 
       - name: Get release name
         id: data
