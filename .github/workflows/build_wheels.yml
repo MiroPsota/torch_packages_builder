@@ -117,7 +117,7 @@ jobs:
 
           if [[ "${{ runner.os }}" == "macOS" ]]; then
             brew install gnu-sed
-            PATH="/opt/homebrew/opt/gnu-sed/libexec/gnubin:$PATH"
+            PATH="/opt/homebrew/opt/gnu-sed/libexec/gnubin:/usr/local/opt/gnu-sed/libexec/gnubin:$PATH"
           fi
 
           HASH=""
