@@ -16,11 +16,6 @@ MACOS_X64 = "macos-13"
 MACOS_ARM64 = "macos-14"
 
 TORCH_RELEASES = {
-    "1.11.0": TorchRelease(("3.7", "3.8", "3.9", "3.10"), ("cpu", "cu102", "cu113", "rocm4.5.2")),
-    "1.12.0": TorchRelease(("3.7", "3.8", "3.9", "3.10"), ("cpu", "cu102", "cu113", "cu116", "rocm5.1.1")),
-    "1.12.1": TorchRelease(("3.7", "3.8", "3.9", "3.10"), ("cpu", "cu102", "cu113", "cu116", "rocm5.1.1")),
-    "1.13.0": TorchRelease(("3.7", "3.8", "3.9", "3.10", "3.11"), ("cpu", "cu116", "cu117", "rocm5.2")),
-    "1.13.1": TorchRelease(("3.7", "3.8", "3.9", "3.10", "3.11"), ("cpu", "cu116", "cu117", "rocm5.2")),
     "2.0.0": TorchRelease(("3.8", "3.9", "3.10", "3.11"), ("cpu", "cu117", "cu118", "rocm5.4.2")),
     "2.0.1": TorchRelease(("3.8", "3.9", "3.10", "3.11"), ("cpu", "cu117", "cu118", "rocm5.4.2")),
     "2.1.0": TorchRelease(("3.8", "3.9", "3.10", "3.11"), ("cpu", "cu118", "cu121", "rocm5.6")),
@@ -78,14 +73,7 @@ def main():
             if limit_compute_platform and compute_platform not in limit_compute_platform:
                 continue
 
-            if torch_version in ("1.13.0", "1.13.1") and os_name != LINUX_X64:
-                continue
-
             if torch_version.startswith("2.5") and python_version == "3.13" and os_name != LINUX_X64:
-                continue
-
-            # Requires VS 2017 not presented in Windows GH runner
-            if compute_platform == "cu102" and os_name == WINDOWS_X64:
                 continue
 
             tv = [int(x) for x in torch_version.split(".")]

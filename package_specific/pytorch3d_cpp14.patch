@@ -1,8 +1,0 @@
---- setup.py
-+++ setup.py
-@@ -52 +52 @@
--    extra_compile_args = {"cxx": ["-std=c++17"]}
-+    extra_compile_args = {"cxx": ["-std=c++14"]}
-@@ -77 +77 @@
--            nvcc_args.append("-std=c++17")
-+            nvcc_args.append("-std=c++14")
