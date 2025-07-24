@@ -104,6 +104,10 @@ jobs:
           echo "Disk space after cleanup:"
           df -h
 
+      - name: Enable longpaths in git
+        if: ${{ runner.os == 'Windows' }}
+        run: git config --global core.longpaths true
+
       - name: Checkout package repository
         uses: actions/checkout@v4
         with:
