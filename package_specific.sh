@@ -4,11 +4,6 @@ set -eu -o pipefail
 
 SCRIPT_DIR=${BASH_SOURCE%/*}
 
-if [[ $REPO == "facebookresearch/Mask2Former" ]] \
-  && [[ $COMPUTE_PLATFORM == "cpu" ]]; then
-  patch -p0 < "$SCRIPT_DIR"/package_specific/Mask2Former_cpu.patch
-fi
-
 if [[ $REPO == "facebookresearch/pytorch3d" ]] && [[ $REPO == "facebookresearch/pytorch3d" ]] \
   && { [[ $COMPUTE_PLATFORM == "cu117" ]] || [[ $COMPUTE_PLATFORM == "cu118" ]] || [[ $COMPUTE_PLATFORM == "cu121" ]]; }; then
   CUB_VERSION="1.17.2"
