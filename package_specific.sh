@@ -22,3 +22,12 @@ if [[ $REPO == "NVlabs/tiny-cuda-nn" ]]; then
   echo "LIBRARY_PATH=/usr/local/cuda/lib64/stubs" >> "$GITHUB_ENV"
   echo "TCNN_CUDA_ARCHITECTURES=${TORCH_CUDA_ARCH_LIST}" | sed "s/\(\.\|\+PTX\)//g" >> "$GITHUB_ENV"
 fi
+
+if [[ $REPO == "Dao-AILab/flash-attention" ]]; then
+  pip install psutil
+  echo FLASH_ATTENTION_FORCE_BUILD=TRUE >> "$GITHUB_ENV"
+  echo NVCC_THREADS=1 >> "$GITHUB_ENV"
+  source "$SCRIPT_DIR"/.github/workflows/cuda/${OS}_env.sh
+  echo "FLASH_ATTN_CUDA_ARCHS=${TORCH_CUDA_ARCH_LIST}" | sed "s/\(\.\|\+PTX\)//g" >> "$GITHUB_ENV"
+  patch -p0 < "$SCRIPT_DIR"/package_specific/flash_attention.patch
+fi
