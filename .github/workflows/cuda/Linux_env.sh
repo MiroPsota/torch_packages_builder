@@ -2,7 +2,6 @@
 # https://github.com/pytorch/builder/blob/main/manywheel/build_cuda.sh
 # https://github.com/pytorch/pytorch/blob/main/.ci/manywheel/build_cuda.sh
 declare -A CUDA_ARCHS=(
-  ["cu117"]="3.7;5.0;6.0;7.0;7.5;8.0;8.6"
   ["cu118"]="3.7;5.0;6.0;7.0;7.5;8.0;8.6;9.0"
 
   ["cu121"]="5.0;6.0;7.0;7.5;8.0;8.6;9.0"

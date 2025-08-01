@@ -5,7 +5,7 @@ set -eu -o pipefail
 SCRIPT_DIR=${BASH_SOURCE%/*}
 
 if [[ $REPO == "facebookresearch/pytorch3d" ]] && [[ $REPO == "facebookresearch/pytorch3d" ]] \
-  && { [[ $COMPUTE_PLATFORM == "cu117" ]] || [[ $COMPUTE_PLATFORM == "cu118" ]] || [[ $COMPUTE_PLATFORM == "cu121" ]]; }; then
+  && { [[ $COMPUTE_PLATFORM == "cu118" ]] || [[ $COMPUTE_PLATFORM == "cu121" ]]; }; then
   CUB_VERSION="1.17.2"
   mkdir cub
   curl -L https://github.com/NVIDIA/cub/archive/${CUB_VERSION}.tar.gz | tar -xzf - --strip-components=1 --directory cub
