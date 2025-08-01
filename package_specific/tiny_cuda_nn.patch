@@ -1,0 +1,5 @@
+--- bindings/torch/setup.py
++++ bindings/torch/setup.py
+@@ -82,1 +82,1 @@
+-cpp_standard = 14
++cpp_standard = 17
