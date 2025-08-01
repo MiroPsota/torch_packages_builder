@@ -4,11 +4,14 @@ This repository serves as a comprehensive toolset for building and indexing PyTo
 
 1. **PyTorch Packages Builder Workflow:**
    - Automates the building of PyTorch-based packages with custom ops on common architectures.
+   - Uses build attestation to establish provenance for wheels*.
    - Publishes the built packages on GitHub releases.
 
 2. **PEP 503 Compliant Package Index Builder Workflow:**
    - Creates a PEP 503 compliant package index.
    - Publishes the index using GitHub Pages for seamless integration with pip.
+
+*Keep in mind that releases can be reuploaded anytime.
 
 ## Usage with Pip
 
