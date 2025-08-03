@@ -2,7 +2,7 @@
 
 case $OS in
   "Linux")
-    export MAX_JOBS=$(nproc)
+    export MAX_JOBS=2
     ;;
   "macOS")
     export CC=clang
@@ -14,7 +14,7 @@ case $OS in
     fi
     ;;
   "Windows")
-    export MAX_JOBS=$(echo %NUMBER_OF_PROCESSORS%)
+    export MAX_JOBS=4
     ;;
   *)
     echo "OS not known"
