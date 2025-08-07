@@ -171,7 +171,10 @@ jobs:
             [ "$1" = "$2" ] && return 1 || versionlte $1 $2
           }
 
-          SETUPTOOLS_VERSION_LIMIT="<75.9"
+          SETUPTOOLS_VERSION_LIMIT=""
+          if versionlt ${{ matrix.torch-version }} "2.8.0" ; then
+            SETUPTOOLS_VERSION_LIMIT="<75.9"
+          fi
           if versionlt ${{ matrix.torch-version }} "2.2.0" ; then
             SETUPTOOLS_VERSION_LIMIT="<70"
           fi
