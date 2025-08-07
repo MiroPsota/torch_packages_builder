@@ -205,6 +205,7 @@ jobs:
         env:
           OS: ${{ runner.os }}
           CUDA_VERSION: ${{ matrix.compute-platform }}
+          TORCH_VERSION: ${{ matrix.torch-version }}
         run: |
           if [[ "${{ matrix.compute-platform }}" != "cpu" ]]; then
             source _builder/.github/workflows/cuda/${{ runner.os }}_env.sh
