@@ -1,0 +1,7 @@
+--- pytorch3d/csrc/pulsar/global.h
++++ pytorch3d/csrc/pulsar/global.h
+@@ -18,2 +18,2 @@
+-#define uint unsigned int
+-#define ushort unsigned short
++using uint = unsigned int;
++using ushort = unsigned short;

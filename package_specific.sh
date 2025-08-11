@@ -4,12 +4,17 @@ set -eu -o pipefail
 
 SCRIPT_DIR=${BASH_SOURCE%/*}
 
-if [[ $REPO == "facebookresearch/pytorch3d" ]] && [[ $REPO == "facebookresearch/pytorch3d" ]] \
-  && { [[ $COMPUTE_PLATFORM == "cu118" ]] || [[ $COMPUTE_PLATFORM == "cu121" ]]; }; then
-  CUB_VERSION="1.17.2"
-  mkdir cub
-  curl -L https://github.com/NVIDIA/cub/archive/${CUB_VERSION}.tar.gz | tar -xzf - --strip-components=1 --directory cub
-  echo "CUB_HOME=$PWD/cub" >> "$GITHUB_ENV"
+if [[ $REPO == "facebookresearch/pytorch3d" ]] && [[ $OS == "Windows" ]]; then
+  if [[ $COMPUTE_PLATFORM == "cu118" ]]; then
+    CUB_VERSION="1.17.2"
+    mkdir cub
+    curl -L https://github.com/NVIDIA/cub/archive/${CUB_VERSION}.tar.gz | tar -xzf - --strip-components=1 --directory cub
+    echo "CUB_HOME=$PWD/cub" >> "$GITHUB_ENV"
+  fi
+  if { [[ $COMPUTE_PLATFORM == "cu126" ]] || [[ $COMPUTE_PLATFORM == "cu128" ]] || [[ $COMPUTE_PLATFORM == "cu129" ]]; } \
+    && [[ $(git describe --tags --exact-match) == "V0.7.8" ]]; then
+    patch -p0 < "$SCRIPT_DIR"/package_specific/pytorch_win_cuda.patch
+  fi
 fi
 
 if [[ $REPO == "facebookresearch/fairseq" ]]; then
