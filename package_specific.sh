@@ -46,3 +46,13 @@ if [[ $REPO == "Dao-AILab/flash-attention" ]]; then
 
   patch -p0 < "$SCRIPT_DIR"/package_specific/flash_attention.patch
 fi
+
+if [[ $REPO == "thu-ml/SageAttention" ]]; then
+  echo NVCC_THREADS=1 >> "$GITHUB_ENV"
+  patch -p0 < "$SCRIPT_DIR"/package_specific/sage_attention.patch
+fi
+
+if [[ $REPO == "thu-ml/SpargeAttn" ]]; then
+  echo NVCC_THREADS=1 >> "$GITHUB_ENV"
+  patch -p0 < "$SCRIPT_DIR"/package_specific/sparge_attention.patch
+fi
