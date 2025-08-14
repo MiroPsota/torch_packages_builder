@@ -1,0 +1,5 @@
+--- setup.py
++++ setup.py
+@@ -70,1 +70,1 @@
+-compute_capabilities = set()
++compute_capabilities = [arch for arch in os.environ.get("TORCH_CUDA_ARCH_LIST").split(";") if arch in SUPPORTED_ARCHS]
