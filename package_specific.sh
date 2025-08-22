@@ -40,6 +40,8 @@ if [[ $REPO == "Dao-AILab/flash-attention" ]]; then
   echo NVCC_THREADS=1 >> "$GITHUB_ENV"
   if [[ $OS == "Linux" ]]; then
     echo MAX_JOBS=2 >> "$GITHUB_ENV"
+  elif [[ $OS == "Windows" ]]; then
+    echo MAX_JOBS=3 >> "$GITHUB_ENV"
   fi
 
   patch -p0 < "$SCRIPT_DIR"/package_specific/flash_attention.patch
