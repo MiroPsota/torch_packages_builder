@@ -44,5 +44,13 @@ if [[ $REPO == "Dao-AILab/flash-attention" ]]; then
     echo MAX_JOBS=3 >> "$GITHUB_ENV"
   fi
 
-  patch -p0 < "$SCRIPT_DIR"/package_specific/flash_attention.patch
+  if [[ $(basename "$REPO_SUBDIR") == "hopper" ]]; then
+    echo FLASH_ATTENTION_OFFLINE_BUILD=TRUE >> "$GITHUB_ENV"
+    if [[ $OS == "Windows" ]]; then
+      echo NVCC_APPEND_FLAGS=/Zc:__cplusplus >> "$GITHUB_ENV"
+    fi
+    patch -p0 < "$SCRIPT_DIR"/package_specific/flash_attention_3.patch
+  else
+    patch -p0 < "$SCRIPT_DIR"/package_specific/flash_attention.patch
+  fi
 fi

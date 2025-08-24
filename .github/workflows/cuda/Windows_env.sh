@@ -23,6 +23,6 @@ export PATH=$CUDA_HOME/bin:$PATH
 
 for item in "cu118" "cu121"; do
   if [ "$CUDA_VERSION" == "$item" ]; then
-    export NVCC_APPEND_FLAGS='--allow-unsupported-compiler -D_ALLOW_COMPILER_AND_STL_VERSION_MISMATCH'
+    export NVCC_APPEND_FLAGS="$NVCC_APPEND_FLAGS --allow-unsupported-compiler -D_ALLOW_COMPILER_AND_STL_VERSION_MISMATCH"
   fi
 done

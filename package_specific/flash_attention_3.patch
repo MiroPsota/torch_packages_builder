@@ -1,0 +1,5 @@
+--- hopper/setup.py
++++ hopper/setup.py
+@@ -406,1 +406,1 @@
+-    if bare_metal_version != Version("12.8"):
++    if False:

@@ -197,6 +197,7 @@ jobs:
         env:
           OS: ${{ runner.os }}
           REPO: ${{ inputs.repo }}
+          REPO_SUBDIR: ${{ inputs.repo-subdir }}
           TORCH_VERSION: ${{ matrix.torch-version }}
           PYTHON_VERSION: ${{ matrix.python-version }}
           COMPUTE_PLATFORM: ${{ matrix.compute-platform }}
