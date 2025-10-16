@@ -12,8 +12,7 @@ class TorchRelease:
 
 LINUX_X64 = "ubuntu-22.04"
 WINDOWS_X64 = "windows-2022"
-MACOS_X64 = "macos-13"
-MACOS_ARM64 = "macos-14"
+MACOS_ARM64 = "macos-15"
 
 TORCH_RELEASES = {
     "2.2.0": TorchRelease(("3.8", "3.9", "3.10", "3.11", "3.12"), ("cpu", "cu118", "cu121", "rocm5.7")),
@@ -49,7 +48,6 @@ def main():
     oses_names = []
     add_os(oses_names, LINUX_X64, "LINUX_WHEELS")
     add_os(oses_names, WINDOWS_X64, "WINDOWS_WHEELS")
-    add_os(oses_names, MACOS_X64, "MACOS_WHEELS")
     add_os(oses_names, MACOS_ARM64, "MACOS_WHEELS")
     if not oses_names:
         raise RuntimeError("Select at least one OS")
@@ -59,7 +57,7 @@ def main():
         for os_name, python_version, compute_platform in product(
             oses_names, TORCH_RELEASES[torch_version].python_versions, TORCH_RELEASES[torch_version].compute_platforms
         ):
-            if os_name in (MACOS_X64, MACOS_ARM64) and compute_platform != "cpu":
+            if os_name == MACOS_ARM64 and compute_platform != "cpu":
                 continue
             if compute_platform.startswith("rocm"):
                 continue
@@ -72,12 +70,7 @@ def main():
             if torch_version.startswith("2.5") and python_version == "3.13" and os_name != LINUX_X64:
                 continue
 
-            tv = [int(x) for x in torch_version.split(".")]
             pv = [int(x) for x in python_version.split(".")]
-            if os_name == MACOS_X64 and tv[0] == 2 and tv[1] >= 3:
-                continue
-
-            # actions/setup-python does not have Python 3.9 or less
             if os_name == MACOS_ARM64 and pv[1] <= 9:
                 continue
 
