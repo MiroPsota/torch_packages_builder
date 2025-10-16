@@ -63,7 +63,7 @@ pytorch3d==0.7.6+pt2.2.1cu121
 
 ## Supported combinations
 
-Tested with PyTorch `2.1.0` - `2.7.1` and their respective compute platforms and supported OSes, with an exception for the `rocm` platform.
+Tested with PyTorch `2.2.0` - `2.7.1` and their respective compute platforms and supported OSes, with an exception for the `rocm` platform.
 
 ## Pitfalls
 
