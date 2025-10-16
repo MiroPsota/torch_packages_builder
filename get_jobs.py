@@ -15,9 +15,6 @@ WINDOWS_X64 = "windows-2022"
 MACOS_ARM64 = "macos-15"
 
 TORCH_RELEASES = {
-    "2.2.0": TorchRelease(("3.8", "3.9", "3.10", "3.11", "3.12"), ("cpu", "cu118", "cu121", "rocm5.7")),
-    "2.2.1": TorchRelease(("3.8", "3.9", "3.10", "3.11", "3.12"), ("cpu", "cu118", "cu121", "rocm5.7")),
-    "2.2.2": TorchRelease(("3.8", "3.9", "3.10", "3.11", "3.12"), ("cpu", "cu118", "cu121", "rocm5.7")),
     "2.3.0": TorchRelease(("3.8", "3.9", "3.10", "3.11", "3.12"), ("cpu", "cu118", "cu121", "rocm6.0")),
     "2.3.1": TorchRelease(("3.8", "3.9", "3.10", "3.11", "3.12"), ("cpu", "cu118", "cu121", "rocm6.0")),
     "2.4.0": TorchRelease(("3.8", "3.9", "3.10", "3.11", "3.12"), ("cpu", "cu118", "cu121", "cu124", "rocm6.1")),
@@ -28,6 +25,12 @@ TORCH_RELEASES = {
     "2.7.0": TorchRelease(("3.9", "3.10", "3.11", "3.12", "3.13"), ("cpu", "cu118", "cu126", "cu128", "rocm6.3")),
     "2.7.1": TorchRelease(("3.9", "3.10", "3.11", "3.12", "3.13"), ("cpu", "cu118", "cu126", "cu128", "rocm6.3")),
     "2.8.0": TorchRelease(("3.9", "3.10", "3.11", "3.12", "3.13"), ("cpu", "cu126", "cu128", "cu129", "rocm6.4")),
+    "2.9.0": TorchRelease(
+        ("3.10", "3.11", "3.12", "3.13", "3.14", "3.14t"), ("cpu", "cu126", "cu128", "cu130", "rocm6.4")
+    ),
+    "2.9.1": TorchRelease(
+        ("3.10", "3.11", "3.12", "3.13", "3.14", "3.14t"), ("cpu", "cu126", "cu128", "cu130", "rocm6.4")
+    ),
 }
 
 
@@ -70,7 +73,7 @@ def main():
             if torch_version.startswith("2.5") and python_version == "3.13" and os_name != LINUX_X64:
                 continue
 
-            pv = [int(x) for x in python_version.split(".")]
+            pv = [int(x) for x in python_version.replace("t", "").split(".")]
             if os_name == MACOS_ARM64 and pv[1] <= 9:
                 continue
 
