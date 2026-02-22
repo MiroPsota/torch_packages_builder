@@ -1,6 +1,7 @@
 #! /bin/bash
 # https://github.com/pytorch/builder/blob/main/windows/cuda*.bat
 # https://github.com/pytorch/pytorch/blob/main/.ci/pytorch/windows/cuda*.bat
+# https://github.com/pytorch/pytorch/blob/main/.ci/pytorch/windows/internal/cuda_config.bat
 declare -A CUDA_ARCHS=(
   ["cu118"]="3.7+PTX;5.0;6.0;6.1;7.0;7.5;8.0;8.6;9.0"
 
@@ -18,6 +19,10 @@ if [[ ${TORCH_VERSION:0:3} == "2.8" ]]; then
 fi
 if [[ ${TORCH_VERSION:0:3} == "2.9" ]]; then
   CUDA_ARCHS["cu128"]="7.0;7.5;8.0;8.6;9.0;10.0;12.0"
+fi
+if [[ ${TORCH_VERSION:0:4} == "2.10" ]]; then
+  CUDA_ARCHS["cu128"]="7.5;8.0;8.6;9.0;10.0;12.0"
+  CUDA_ARCHS["cu129"]="7.5;8.0;8.6;9.0;10.0;12.0"
 fi
 export TORCH_CUDA_ARCH_LIST=${CUDA_ARCHS[$CUDA_VERSION]}
 export FORCE_CUDA=1
