@@ -80,6 +80,10 @@ def main():
             if os_name == MACOS_ARM64 and pv[1] <= 9:
                 continue
 
+            # skip CUDA 13.0 on Windows for now
+            if os_name == WINDOWS_X64 and compute_platform == "cu130":
+                continue
+
             jobs.append({
                 "os": os_name,
                 "torch-version": torch_version,
