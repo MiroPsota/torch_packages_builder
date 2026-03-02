@@ -16,11 +16,11 @@ CUDA_LINK=${CUDA_LINKS[$CUDA_VERSION]}
 CUDA_SHORT=${CUDA_VERSION:2:2}.${CUDA_VERSION:4:1}
 curl -k -L $CUDA_LINK --output _cuda_installer.exe
 
-# crt component is separate in CUDA 13.0+
-CRT_COMPONENT=""
+# crt and nvvm components are separate in CUDA 13.0+
+EXTRA_COMPONENTS=""
 if [[ ${CUDA_VERSION:2:2} -ge 13 ]]; then
-  CRT_COMPONENT="crt_${CUDA_SHORT}"
+  EXTRA_COMPONENTS="crt_${CUDA_SHORT} nvvm_${CUDA_SHORT}"
 fi
 
-PowerShell -Command "Start-Process -FilePath \"_cuda_installer.exe\" -ArgumentList \"-s nvcc_${CUDA_SHORT} cublas_dev_${CUDA_SHORT} cudart_${CUDA_SHORT} cufft_dev_${CUDA_SHORT} curand_dev_${CUDA_SHORT} cusolver_dev_${CUDA_SHORT} cusparse_dev_${CUDA_SHORT} thrust_${CUDA_SHORT} npp_dev_${CUDA_SHORT} nvrtc_dev_${CUDA_SHORT} nvml_dev_${CUDA_SHORT} ${CRT_COMPONENT}\" -Wait -NoNewWindow"
+PowerShell -Command "Start-Process -FilePath \"_cuda_installer.exe\" -ArgumentList \"-s nvcc_${CUDA_SHORT} cublas_dev_${CUDA_SHORT} cudart_${CUDA_SHORT} cufft_dev_${CUDA_SHORT} curand_dev_${CUDA_SHORT} cusolver_dev_${CUDA_SHORT} cusparse_dev_${CUDA_SHORT} thrust_${CUDA_SHORT} npp_dev_${CUDA_SHORT} nvrtc_dev_${CUDA_SHORT} nvml_dev_${CUDA_SHORT} ${EXTRA_COMPONENTS}\" -Wait -NoNewWindow"
 rm _cuda_installer.exe
