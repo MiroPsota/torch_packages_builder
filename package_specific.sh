@@ -19,6 +19,13 @@ fi
 if [[ $REPO == "facebookresearch/fairseq" ]]; then
   pip install cython
   patch -p0 < "$SCRIPT_DIR"/package_specific/fairseq_cub.patch
+
+  # Fix 'std': ambiguous symbol error in compiled_autograd.h when compiling CUDA extensions on Windows
+  # https://github.com/pytorch/pytorch/issues/173232
+  if [[ $OS == "Windows" ]] && [[ $COMPUTE_PLATFORM != "cpu" ]]; then
+    COMPILED_AUTOGRAD="$(python -c 'import torch, os; print(os.path.dirname(torch.__file__))')/include/torch/csrc/dynamo/compiled_autograd.h"
+    sed -i 's/#if defined(_WIN32) && (defined(USE_CUDA) || defined(USE_ROCM))/#if defined(_WIN32) \&\& defined(__NVCC__)/' "$COMPILED_AUTOGRAD"
+  fi
 fi
 
 if [[ $REPO == "NVlabs/tiny-cuda-nn" ]]; then
