@@ -30,6 +30,11 @@ if [[ $REPO == "NVlabs/tiny-cuda-nn" ]]; then
   echo "LIBRARY_PATH=/usr/local/cuda/lib64/stubs" >> "$GITHUB_ENV"
   echo "TCNN_CUDA_ARCHITECTURES=${TORCH_CUDA_ARCH_LIST}" | sed "s/\(\.\|\+PTX\)//g" >> "$GITHUB_ENV"
 
+  SETUPTOOLS_VERSION=$(pip show setuptools | grep '^Version:' | awk '{print $2}')
+  if python -c "from packaging.version import Version; exit(0 if Version('$SETUPTOOLS_VERSION') >= Version('82') else 1)"; then
+    pip install 'setuptools<82'
+  fi
+
   patch -p0 < "$SCRIPT_DIR"/package_specific/tiny_cuda_nn.patch
 fi
 
