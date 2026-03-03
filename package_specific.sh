@@ -38,6 +38,27 @@ if [[ $REPO == "NVlabs/tiny-cuda-nn" ]]; then
   patch -p0 < "$SCRIPT_DIR"/package_specific/tiny_cuda_nn.patch
 fi
 
+if [[ $REPO == "open-mmlab/mmcv" ]]; then
+  pip install addict yapf
+  SETUPTOOLS_VERSION=$(pip show setuptools | grep '^Version:' | awk '{print $2}')
+  if python -c "from packaging.version import Version; exit(0 if Version('$SETUPTOOLS_VERSION') >= Version('82') else 1)"; then
+    pip install 'setuptools<82'
+  fi
+
+  # Fix 'std': ambiguous symbol error in compiled_autograd.h when compiling CUDA extensions on Windows
+  # https://github.com/pytorch/pytorch/issues/173232
+  if [[ $OS == "Windows" ]] && [[ $COMPUTE_PLATFORM != "cpu" ]]; then
+    COMPILED_AUTOGRAD="$(python -c 'import torch, os; print(os.path.dirname(torch.__file__))')/include/torch/csrc/dynamo/compiled_autograd.h"
+    sed -i 's/#if defined(_WIN32) && (defined(USE_CUDA) || defined(USE_ROCM))/#if defined(_WIN32) \&\& defined(__NVCC__)/' "$COMPILED_AUTOGRAD"
+  fi
+
+  echo "MMCV_WITH_OPS=1" >> "$GITHUB_ENV"
+
+  if python -c "import sys; sys.exit(0 if sys.version_info >= (3, 13) else 1)"; then
+    patch -p0 < "$SCRIPT_DIR"/package_specific/mmcv_py313plus.patch
+  fi
+fi
+
 if [[ $REPO == "Dao-AILab/flash-attention" ]]; then
   pip install psutil
 

@@ -1,0 +1,52 @@
+--- setup.py
++++ setup.py
+@@ -2,7 +2,9 @@
+ import os
+ import platform
+ import re
+-from pkg_resources import DistributionNotFound, get_distribution, parse_version
++from importlib.metadata import PackageNotFoundError
++from importlib.metadata import distribution as _get_dist
++from packaging.version import parse as parse_version
+ from setuptools import find_packages, setup
+ 
+ EXT_TYPE = ''
+@@ -33,8 +35,8 @@
+     return secondary."""
+     try:
+         name = re.split(r'[!<>=]', primary)[0]
+-        get_distribution(name)
+-    except DistributionNotFound:
++        _get_dist(name)
++    except PackageNotFoundError:
+         return secondary
+ 
+     return str(primary)
+@@ -43,8 +45,16 @@
+ def get_version():
+     version_file = 'mmcv/version.py'
+     with open(version_file, encoding='utf-8') as f:
+-        exec(compile(f.read(), version_file, 'exec'))
+-    return locals()['__version__']
++        content = f.read()
++    # Prefer regex parsing to avoid exec scoping issues on newer Python.
++    m = re.search(r"^__version__\s*=\s*['\"]([^'\"]+)['\"]", content, re.M)
++    if m:
++        return m.group(1)
++    version = {}
++    exec(compile(content, version_file, 'exec'), version)
++    if '__version__' in version:
++        return version['__version__']
++    raise RuntimeError(f"Unable to find __version__ in {version_file}")
+ 
+ 
+ def parse_requirements(fname='requirements/runtime.txt', with_version=True):
+@@ -376,7 +386,7 @@
+               and torch.backends.mps.is_available()) or os.getenv(
+                   'FORCE_MPS', '0') == '1':
+             # objc compiler support
+-            from distutils.unixccompiler import UnixCCompiler
++            from setuptools._distutils.unixccompiler import UnixCCompiler
+             if '.mm' not in UnixCCompiler.src_extensions:
+                 UnixCCompiler.src_extensions.append('.mm')
+                 UnixCCompiler.language_map['.mm'] = 'objc'
