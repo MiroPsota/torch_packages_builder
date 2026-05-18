@@ -10,3 +10,8 @@ for item in "cu118" "cu121"; do
     export NVCC_APPEND_FLAGS='--allow-unsupported-compiler -D_ALLOW_COMPILER_AND_STL_VERSION_MISMATCH'
   fi
 done
+
+CUDA_MAJOR=${CUDA_VERSION:2:2}
+if [ "$CUDA_MAJOR" -ge "13" ] 2>/dev/null; then
+  export NVCC_APPEND_FLAGS="${NVCC_APPEND_FLAGS:+$NVCC_APPEND_FLAGS }-Xcompiler /Zc:preprocessor"
+fi
