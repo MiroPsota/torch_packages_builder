@@ -1,0 +1,5 @@
+--- bindings/torch/setup.py
++++ bindings/torch/setup.py
+@@ -131,1 +131,1 @@
+-	base_cflags = [f"/std:c++{cpp_standard}"]
++	base_cflags = ["/std:c++20"]

@@ -35,7 +35,11 @@ if [[ $REPO == "NVlabs/tiny-cuda-nn" ]]; then
     pip install 'setuptools<82'
   fi
 
-  patch -p0 < "$SCRIPT_DIR"/package_specific/tiny_cuda_nn.patch
+  patch -p0 < "$SCRIPT_DIR"/package_specific/tiny_cuda_nn_cpp17.patch
+
+  if [[ $OS == "Windows" ]] && python -c "from packaging.version import Version; exit(0 if Version('$TORCH_VERSION') >= Version('2.13') else 1)"; then
+    patch -p0 < "$SCRIPT_DIR"/package_specific/tiny_cuda_nn_win_cpp20.patch
+  fi
 fi
 
 if [[ $REPO == "open-mmlab/mmcv" ]]; then
@@ -56,6 +60,10 @@ if [[ $REPO == "open-mmlab/mmcv" ]]; then
 
   if python -c "import sys; sys.exit(0 if sys.version_info >= (3, 13) else 1)"; then
     patch -p0 < "$SCRIPT_DIR"/package_specific/mmcv_py313plus.patch
+  fi
+
+  if [[ $OS == "Windows" ]] && python -c "from packaging.version import Version; exit(0 if Version('$TORCH_VERSION') >= Version('2.13') else 1)"; then
+    patch -p0 < "$SCRIPT_DIR"/package_specific/mmcv_win_cpp20.patch
   fi
 fi
 
