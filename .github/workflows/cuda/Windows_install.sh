@@ -11,6 +11,7 @@ declare -A CUDA_LINKS=(
 
   ["cu130"]="https://developer.download.nvidia.com/compute/cuda/13.0.2/local_installers/cuda_13.0.2_windows.exe"
   ["cu132"]="https://developer.download.nvidia.com/compute/cuda/13.2.1/local_installers/cuda_13.2.1_windows.exe"
+  ["cu134"]="https://developer.download.nvidia.com/compute/cuda/13.4.3/local_installers/cuda_13.4.3_windows_x86_64.exe"
 )
 CUDA_LINK=${CUDA_LINKS[$CUDA_VERSION]}
 
